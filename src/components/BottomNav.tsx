@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconLibrary, IconLive, IconUser } from "./Icons";
+import {
+  IconHome,
+  IconLive,
+  IconUser,
+  IconDumbbell,
+  IconBag,
+} from "./Icons";
 
 const items = [
-  { href: "/", label: "Descobrir", icon: IconHome },
-  { href: "/library", label: "Biblioteca", icon: IconLibrary },
-  { href: "/live/premium", label: "Premium", icon: IconLive },
-  { href: "/account", label: "Conta", icon: IconUser },
+  { href: "/", label: "Início", icon: IconHome },
+  { href: "/treinos", label: "Treinos", icon: IconDumbbell },
+  { href: "/live/free", label: "Live", icon: IconLive },
+  { href: "/loja", label: "Loja", icon: IconBag },
+  { href: "/account", label: "Perfil", icon: IconUser },
 ];
 
 export function BottomNav() {
@@ -20,17 +27,19 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-black/5 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-md items-stretch justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-1">
+      <div className="mx-auto flex max-w-md items-stretch justify-around px-1 pb-[env(safe-area-inset-bottom)] pt-1">
         {items.map(({ href, label, icon: Icon }) => {
           const active =
             href === "/"
               ? pathname === "/"
-              : pathname === href || pathname?.startsWith(href + "/");
+              : href === "/live/free"
+                ? pathname?.startsWith("/live")
+                : pathname === href || pathname?.startsWith(href + "/");
           return (
             <Link
               key={href}
               href={href}
-              className={`flex min-w-[4.5rem] flex-col items-center gap-0.5 rounded-2xl px-3 py-2 text-[11px] font-medium transition ${
+              className={`flex min-w-[3.6rem] flex-col items-center gap-0.5 rounded-2xl px-2 py-2 text-[10px] font-medium transition ${
                 active ? "text-black" : "text-neutral-400"
               }`}
             >
