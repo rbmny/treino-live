@@ -78,15 +78,30 @@ Fontes: `src/lib/data.ts`, `src/lib/content.ts`
 
 ## Wiring Stripe + Supabase
 
-Stubs em `src/lib/stripe*`, `src/app/api/stripe/*`, `src/lib/supabase/*` + `.env.example`.  
+Stubs em `src/lib/stripe*`, `src/app/api/stripe/*` (moved to `_api_server_only/` for Pages), `src/lib/supabase/*` + `.env.example`.  
 UI demo não depende de keys; com `STRIPE_SECRET_KEY` o checkout tenta Hosted Checkout.
 
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript + Tailwind  
-- System fonts · Apple Fitness–like cards · mobile-first · silhuetas SVG  
+- System fonts · Apple Fitness–like cards · mobile-first · silhuetas SVG
 
-## GitHub
+## GitHub Pages (static export)
 
-Repo: [rbmny/treino-live](https://github.com/rbmny/treino-live).  
-Não alterar `rbmny/treino-plus-preview` / `/workspace/trainer-preview`.
+This app can be statically exported for project Pages at
+`https://rbmny.github.io/treino-plus-preview/`.
+
+`next.config.mjs` sets `output: 'export'`, `basePath` / `assetPrefix`
+`/treino-plus-preview`, and `images.unoptimized`.
+
+**API routes:** Next static export cannot include `src/app/api/**`.
+Server-only Stripe stubs live in `_api_server_only/` (moved out of `src/app`
+for the Pages build). Demo UI uses localStorage modals and does not need them.
+To run with real Stripe locally, move `_api_server_only` back to `src/app/api`
+and remove or relax `output: 'export'`.
+
+```bash
+npm run build   # writes out/
+```
+
+Deploy: copy `out/` (plus `.nojekyll`) to `rbmny/treino-plus-preview` repo root.
