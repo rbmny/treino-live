@@ -3,9 +3,9 @@ import "./globals.css";
 import { AppShell } from "@/components/Shell";
 
 export const metadata: Metadata = {
-  title: "Treino Live — Fitness com Ricky",
+  title: "Treino Live — Live, treinos e loja",
   description:
-    "Live gratuita, treinos sob demanda e Premium Live. Demo mobile-first.",
+    "Live gratuita, protocolos, Fast Trainer, corrida, ebook, loja e Premium. Demo mobile-first.",
 };
 
 export const viewport: Viewport = {
