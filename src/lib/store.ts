@@ -46,7 +46,6 @@ function readStore(): DemoStore {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      // migrate v1 if present
       const v1 = localStorage.getItem("treino-live-demo-v1");
       if (v1) {
         const parsed = JSON.parse(v1) as Partial<DemoStore>;
