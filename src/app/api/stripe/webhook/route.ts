@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
+      // TODO: marcar VOD como comprado / ativar premium no Supabase (user id via client_reference_id / metadata)
       console.info(
         JSON.stringify({
           source: "stripe/webhook",
@@ -83,6 +84,7 @@ export async function POST(req: NextRequest) {
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription;
+      // TODO: sincronizar status premium (active / canceled / past_due) com a tabela de assinaturas
       console.info(
         JSON.stringify({
           source: "stripe/webhook",
