@@ -41,9 +41,9 @@ function PremiumLiveInner() {
             <LiveBadge label="PREMIUM" />
           </div>
           <div className="absolute bottom-6 left-4 right-4">
-            <p className="text-xs text-white/80">{premiumLive.trainer}</p>
+            <p className="text-xs text-white">{premiumLive.trainer}</p>
             <h1 className="text-2xl font-semibold">{premiumLive.title}</h1>
-            <p className="mt-2 text-sm text-white/75">
+            <p className="mt-2 text-sm text-white/90">
               Sala exclusiva · {premiumLive.viewerCount} assinantes
             </p>
           </div>
@@ -70,7 +70,7 @@ function PremiumLiveInner() {
   return (
     <main className="px-4 pb-4 pt-6">
       <header className="mb-6">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-400">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-500">
           Exclusivo
         </p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight">
@@ -81,21 +81,22 @@ function PremiumLiveInner() {
       <div
         className={`relative overflow-hidden rounded-[28px] bg-gradient-to-br ${premiumLive.gradient} p-5 text-white shadow-lg`}
       >
-        <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/20 blur-3xl" />
-        <div className="relative z-10">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/10" />
+        <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/15 blur-3xl" />
+        <div className="relative z-10 drop-shadow">
           <div className="flex items-center gap-2">
             <LiveBadge label="PREMIUM" />
             {locked && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-black/25 px-2 py-1 text-[10px] font-semibold backdrop-blur">
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/35 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur">
                 <IconLock className="h-3 w-3" /> Assinantes
               </span>
             )}
           </div>
-          <h2 className="mt-4 text-2xl font-semibold leading-tight">
+          <h2 className="mt-4 text-2xl font-semibold leading-tight text-white">
             {premiumLive.title}
           </h2>
-          <p className="mt-2 text-sm text-white/85">{premiumLive.description}</p>
-          <p className="mt-3 text-xs text-white/70">{premiumLive.startsAt}</p>
+          <p className="mt-2 text-sm font-medium text-white/95">{premiumLive.description}</p>
+          <p className="mt-3 text-xs font-semibold text-white">{premiumLive.startsAt}</p>
 
           {locked ? (
             <button
