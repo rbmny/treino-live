@@ -95,7 +95,11 @@ export function WorkoutGlyph({
     case "flame":
       return (
         <svg {...common} viewBox="0 0 64 64">
-          <path d="M32 8c4 10-8 14-4 26 2 6 8 10 12 10 10 0 16-10 12-22-8 4-10 10-10 10S38 18 32 8z" fill="currentColor" opacity="0.85" />
+          <path
+            d="M32 8c4 10-8 14-4 26 2 6 8 10 12 10 10 0 16-10 12-22-8 4-10 10-10 10S38 18 32 8z"
+            fill="currentColor"
+            opacity="0.85"
+          />
           <path d="M28 42c0-6 4-10 6-14 4 6 10 8 10 16a12 12 0 1 1-16-2z" fill="currentColor" />
         </svg>
       );
@@ -120,7 +124,14 @@ export function WorkoutGlyph({
       return (
         <svg {...common} viewBox="0 0 64 64">
           <circle cx="38" cy="12" r="5" fill="currentColor" />
-          <path d="M20 54l8-14 10 4 6-12M28 40l-6-12 12-2 8 8" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <path
+            d="M20 54l8-14 10 4 6-12M28 40l-6-12 12-2 8 8"
+            stroke="currentColor"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
         </svg>
       );
     case "abs":
@@ -132,6 +143,7 @@ export function WorkoutGlyph({
       );
   }
 }
+
 
 export function IconDumbbell({ className = "w-6 h-6" }: IconProps) {
   return (
