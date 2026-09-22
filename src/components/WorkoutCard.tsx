@@ -18,15 +18,16 @@ export function WorkoutCard({
       <div
         className={`relative flex h-40 items-end justify-between bg-gradient-to-br ${workout.gradient} p-4 text-white`}
       >
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/30 blur-2xl" />
-          <div className="absolute -bottom-8 left-8 h-24 w-24 rounded-full bg-black/20 blur-xl" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-black/10" />
+        <div className="absolute inset-0 opacity-25">
+          <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/25 blur-2xl" />
+          <div className="absolute -bottom-8 left-8 h-24 w-24 rounded-full bg-black/25 blur-xl" />
         </div>
-        <div className="relative z-10">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-white/80">
+        <div className="relative z-10 drop-shadow-sm">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-white/90">
             {workout.category} · {workout.durationMin} min
           </p>
-          <h3 className="mt-1 max-w-[12rem] text-lg font-semibold leading-tight">
+          <h3 className="mt-1 max-w-[12rem] text-lg font-semibold leading-tight text-white">
             {workout.title}
           </h3>
         </div>
