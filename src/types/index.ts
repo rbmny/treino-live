@@ -25,7 +25,7 @@ export interface LiveSession {
   title: string;
   description: string;
   trainer: string;
-  startsAt: string; // ISO or relative label
+  startsAt: string;
   isFree: boolean;
   viewerCount: number;
   status: "ao-vivo" | "em-breve" | "encerrado";
@@ -38,9 +38,40 @@ export interface User {
   createdAt: string;
 }
 
+export type BodyPartId =
+  | "peito"
+  | "costas"
+  | "biceps"
+  | "triceps"
+  | "ombros"
+  | "gluteo"
+  | "pernas"
+  | "full"
+  | "core";
+
+export type ProtocolLevel = "inter" | "avancado";
+export type RunProgramId = "5k" | "10k";
+export type AdaptId = "lipedema" | "gravida" | "joelho" | "coluna";
+
 export interface DemoStore {
   user: User | null;
   ownedWorkoutIds: string[];
+  ownedShopIds: string[];
   premiumSubscribed: boolean;
   premiumRenewsAt: string | null;
+  /** 0–100 */
+  protocolProgress: Record<ProtocolLevel, number>;
+  protocolStarted: Record<ProtocolLevel, boolean>;
+  /** day keys like "5k:w1:d1" */
+  corridaDone: string[];
+  corridaActive: RunProgramId | null;
+  ebookChaptersRead: string[];
+  streak: number;
+  lastWorkoutAt: string | null;
+  adaptationsSaved: AdaptId[];
+}
+
+export interface ChatMessage {
+  user: string;
+  text: string;
 }
