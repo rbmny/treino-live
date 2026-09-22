@@ -16,7 +16,7 @@ export const freeLive: LiveSession = {
   isFree: true,
   viewerCount: 1284,
   status: "ao-vivo",
-  gradient: "from-rose-500 via-orange-400 to-amber-300",
+  gradient: "from-rose-700 via-orange-600 to-amber-700",
 };
 
 export const premiumLive: LiveSession = {
@@ -29,7 +29,7 @@ export const premiumLive: LiveSession = {
   isFree: false,
   viewerCount: 312,
   status: "ao-vivo",
-  gradient: "from-violet-600 via-fuchsia-500 to-pink-400",
+  gradient: "from-violet-700 via-fuchsia-600 to-pink-600",
 };
 
 export const workouts: Workout[] = [
@@ -71,7 +71,7 @@ export const workouts: Workout[] = [
     category: "Yoga",
     priceBRL: 24.9,
     trainer: TRAINER.name,
-    gradient: "from-emerald-400 to-teal-600",
+    gradient: "from-emerald-600 to-teal-800",
     accent: "#10b981",
     icon: "lotus",
   },
@@ -85,7 +85,7 @@ export const workouts: Workout[] = [
     category: "Mobilidade",
     priceBRL: 14.9,
     trainer: TRAINER.name,
-    gradient: "from-cyan-400 to-blue-600",
+    gradient: "from-cyan-600 to-blue-800",
     accent: "#22d3ee",
     icon: "stretch",
   },
@@ -99,7 +99,7 @@ export const workouts: Workout[] = [
     category: "Cardio",
     priceBRL: 22.9,
     trainer: TRAINER.name,
-    gradient: "from-lime-400 to-green-600",
+    gradient: "from-lime-600 to-green-800",
     accent: "#84cc16",
     icon: "run",
   },

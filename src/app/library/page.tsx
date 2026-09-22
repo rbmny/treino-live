@@ -32,7 +32,7 @@ export default function LibraryPage() {
   return (
     <main className="px-4 pb-4 pt-6">
       <header className="mb-5">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-400">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-500">
           Sob demanda
         </p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight">
