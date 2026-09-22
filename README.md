@@ -114,3 +114,14 @@ git push -u origin main
 ```
 
 Não alterar `rbmny/treino-plus-preview`.
+
+
+## Stripe test vs demo
+
+Checkout and Subscribe modals call `POST /api/stripe/checkout` first (`src/lib/stripe-client.ts`).
+
+- If `STRIPE_SECRET_KEY` is set → redirect to Stripe Hosted Checkout (test mode).
+- If missing / misconfigured → **demoFallback** keeps the existing localStorage funnel (`src/lib/store.ts`) so the UI never bricks.
+- After real Checkout, success URLs land on `?paid=1` / `?subscribed=1` and unlock the same demo entitlements until Supabase persistence lands.
+- Premium needs `STRIPE_PREMIUM_PRICE_ID` (or `NEXT_PUBLIC_STRIPE_PREMIUM_PRICE_ID`).
+- Webhook: `stripe listen --forward-to localhost:3000/api/stripe/webhook`
