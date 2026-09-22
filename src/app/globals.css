@@ -27,7 +27,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Mobile-first content column feel without phone bezel */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
