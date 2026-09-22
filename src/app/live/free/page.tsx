@@ -7,8 +7,9 @@ import { LiveBadge } from "@/components/LiveBadge";
 import { UpsellSheet } from "@/components/UpsellSheet";
 import { SubscribeModal } from "@/components/SubscribeModal";
 import { IconClose } from "@/components/Icons";
+import type { ChatMessage } from "@/types";
 
-const MOCK_CHAT = [
+const MOCK_CHAT: ChatMessage[] = [
   { user: "Ana", text: "Primeira vez aqui! 💪" },
   { user: "Bruno", text: "Queima já começou" },
   { user: "Carla", text: "Som top hoje" },
@@ -17,30 +18,100 @@ const MOCK_CHAT = [
   { user: "Fábio", text: "Ricky mandando bem" },
 ];
 
+const CHAT_KEY = "treino-live-free-chat";
+const JOIN_KEY = "treino-live-free-joined";
+
+function loadChat(): ChatMessage[] {
+  if (typeof window === "undefined") return MOCK_CHAT.slice(0, 3);
+  try {
+    const raw = sessionStorage.getItem(CHAT_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) {
+        const clean = parsed.filter(
+          (m): m is ChatMessage =>
+            !!m &&
+            typeof m === "object" &&
+            typeof (m as ChatMessage).user === "string" &&
+            typeof (m as ChatMessage).text === "string"
+        );
+        if (clean.length) return clean;
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return MOCK_CHAT.slice(0, 3);
+}
+
+function saveChat(messages: ChatMessage[]) {
+  try {
+    sessionStorage.setItem(CHAT_KEY, JSON.stringify(messages));
+  } catch {
+    /* ignore */
+  }
+}
+
 export default function FreeLivePage() {
   const [viewers, setViewers] = useState(freeLive.viewerCount);
-  const [chat, setChat] = useState(MOCK_CHAT.slice(0, 3));
+  const [chat, setChat] = useState<ChatMessage[]>(MOCK_CHAT.slice(0, 3));
   const [upsell, setUpsell] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
   const [msg, setMsg] = useState("");
+  const [joined, setJoined] = useState(false);
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setViewers((v) => v + Math.floor(Math.random() * 5) - 1);
-    }, 4000);
-    return () => clearInterval(t);
+    const existing = loadChat();
+    setChat(existing);
+
+    // Join once per session → bump viewer mock
+    const already = sessionStorage.getItem(JOIN_KEY);
+    if (!already) {
+      sessionStorage.setItem(JOIN_KEY, "1");
+      setViewers((v) => v + 1);
+      setJoined(true);
+    } else {
+      setJoined(true);
+    }
   }, []);
 
   useEffect(() => {
-    let i = 3;
+    if (!joined) return;
+    const t = setInterval(() => {
+      setViewers((v) => Math.max(1, v + Math.floor(Math.random() * 5) - 1));
+    }, 4000);
+    return () => clearInterval(t);
+  }, [joined]);
+
+  useEffect(() => {
+    let i = Math.max(3, chat.length);
     const t = setInterval(() => {
       if (i < MOCK_CHAT.length) {
-        setChat((c) => [...c, MOCK_CHAT[i]]);
-        i += 1;
+        setChat((c) => {
+          const incoming = MOCK_CHAT[i];
+          if (!incoming) return c;
+          // don't re-add if user already has longer session chat
+          if (
+            c.some(
+              (m) =>
+                m &&
+                m.user === incoming.user &&
+                m.text === incoming.text
+            )
+          ) {
+            i += 1;
+            return c;
+          }
+          const next = [...c, incoming];
+          saveChat(next);
+          i += 1;
+          return next;
+        });
       }
     }, 3500);
     return () => clearInterval(t);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [joined]);
 
   useEffect(() => {
     const t = setTimeout(() => setUpsell(true), 12000);
@@ -50,7 +121,11 @@ export default function FreeLivePage() {
   function sendChat(e: React.FormEvent) {
     e.preventDefault();
     if (!msg.trim()) return;
-    setChat((c) => [...c, { user: "Você", text: msg.trim() }]);
+    setChat((c) => {
+      const next = [...c, { user: "Você", text: msg.trim() }];
+      saveChat(next);
+      return next;
+    });
     setMsg("");
   }
 
@@ -91,6 +166,7 @@ export default function FreeLivePage() {
           </h1>
           <p className="mt-1 text-xs text-white/75">
             Grátis · sem login · sem pagamento
+            {joined ? " · você entrou" : ""}
           </p>
         </div>
       </div>
@@ -111,9 +187,11 @@ export default function FreeLivePage() {
           </button>
         </div>
 
-        <div className="mb-2 flex-1 space-y-2 overflow-y-auto">
-          {chat.map((c, idx) => (
-            <div key={idx} className="text-sm">
+        <div className="mb-2 max-h-48 flex-1 space-y-2 overflow-y-auto">
+          {chat
+            .filter((c) => c && c.user && c.text)
+            .map((c, idx) => (
+            <div key={`${c.user}-${idx}-${c.text.slice(0, 8)}`} className="text-sm">
               <span className="font-semibold text-orange-300">{c.user}</span>{" "}
               <span className="text-white/85">{c.text}</span>
             </div>
