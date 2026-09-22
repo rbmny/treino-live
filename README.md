@@ -1,8 +1,8 @@
 # Treino Live
 
-App mobile-first de fitness trainer (UI em **PT-BR**): live gratuita (topo de funil), VODs com compra única e assinatura Premium Live.
+App mobile-first de fitness trainer (UI em **PT-BR**): live gratuita (topo de funil), VODs, Premium Live, **protocolos**, Fast Trainer, corrida, adaptações, ebook e loja.
 
-Demo completa **sem chaves Stripe** — auth, compras e assinatura persistem em `localStorage`.
+Demo completa **sem chaves Stripe** — auth, compras, assinatura e progresso persistem em `localStorage` (`treino-live-demo-v2`).
 
 ## Como rodar
 
@@ -13,7 +13,7 @@ npm run dev
 ```
 
 Abra [http://localhost:3000](http://localhost:3000).  
-Layout pensado para ~430px (mobile). No desktop, a coluna central simula o app.
+Layout pensado para ~430px (mobile). Sem fake phone bezel.
 
 ```bash
 npm run build && npm start   # produção local
@@ -23,105 +23,70 @@ npm run build && npm start   # produção local
 
 | Rota | Tela | Notas |
 |------|------|--------|
-| `/` | Descobrir / Home | Hero da live **grátis** + cards de funil + VODs em destaque |
-| `/live/free` | Sala Free Live | Sem login · chat mock · contador · upsell sheet |
-| `/library` | Biblioteca VOD | 6 treinos com preços em BRL · filtros |
-| `/workout/[id]` | Detalhe do treino | Comprar (checkout demo) ou assistir se owned |
-| `/live/premium` | Lobby Premium Live | Trancado vs. assinado · sala exclusiva |
-| `/account` | Conta | Sign-in demo · compras · portal de assinatura |
-| `/trainer` | Host panel | “Go live (free)” mock para o trainer |
+| `/` | Início / Home | Hero **Free Live** + Continuar + funil VOD/Premium + Explorar (adaptações, ebook, corrida, treinos). Sem “Métodos em destaque” / “Por grupo muscular” na Home |
+| `/treinos` | Hub de treinos | Fast Trainer, protocolos Inter/Avançado, métodos, grid de grupos musculares com silhuetas |
+| `/treinos/protocolo/inter` | Protocolo Intermediário | Sessões com highlights + % persistido |
+| `/treinos/protocolo/avancado` | Protocolo Avançado | Blocos de periodização + % persistido |
+| `/treinos/fast` | Fast / Quicky Trainer | Timer real (work/rest · 4 rounds) → toast + streak |
+| `/treinos/corpo/[part]` | Grupo muscular | Peito, Costas, Bíceps, Tríceps, Ombros, Glúteo, Pernas, Full, Core |
+| `/corrida` | Hub corrida | 0→5 km e 0→10 km |
+| `/corrida/5k` · `/corrida/10k` | Programa | Semanas/fases + dias marcáveis |
+| `/adaptacoes` | Hub adaptações | Lipedema, gestação, joelho, coluna |
+| `/adaptacoes/[id]` | Detalhe | Exercícios + salvar no plano |
+| `/ebook` | Ebook nutri | Capa + capítulos marcáveis como lidos |
+| `/loja` | Marketplace | Grid com preços · buy demo → owned |
+| `/library` | Biblioteca VOD | 6 treinos compra única (legado do funil) |
+| `/workout/[id]` | Detalhe VOD | Checkout Stripe-shaped / demo |
+| `/live/free` | Sala Free Live | Sem login · join +1 viewer · chat na session · upsells |
+| `/live/premium` | Lobby Premium Live | Gate por assinatura demo |
+| `/account` | Perfil | Auth, streak, protocolo %, ebook, VODs, loja, portal |
+| `/trainer` | Host panel | Go live (free) mock |
+
+**Bottom nav:** Início · Treinos · Live · Loja · Perfil
+
+## O que ficou mais funcional (demo)
+
+- Progresso persistido: protocolo %, dias de corrida, capítulos do ebook, VODs, itens da loja, premium, streak, adaptações salvas
+- Fast Trainer: countdown work/rest que completa workout → toast + streak
+- Free live: join incrementa viewers (1×/sessão); mensagens do chat ficam em `sessionStorage`
+- Loja: “Comprar” adiciona a `ownedShopIds` (Plano Anual também ativa Premium)
+- Upsells Free Live → VOD / Premium mantidos
+- Silhuetas SVG e ilustrações portadas de `trainer-preview` como componentes React
 
 ## Seed de dados
 
-- **1 live free** — Full Body ao vivo  
-- **1 live premium** — Hipertrofia avançada  
-- **6 VODs** — Força, HIIT, Yoga, Mobilidade, Cardio, Core (R$ 14,90–29,90)  
-- **Premium** — R$ 49,90/mês  
+- Live free + live premium  
+- 6 VODs (R$ 14,90–29,90)  
+- Premium R$ 49,90/mês  
+- Protocolos Inter (8 sem) / Avançado (12 sem)  
+- Fast Quicky 15 min · 5 exercícios · 4 rounds  
+- Corrida 5k / 10k  
+- 4 adaptações · ebook 7 capítulos · 6 produtos loja  
 
-Fonte: `src/lib/data.ts`
+Fontes: `src/lib/data.ts`, `src/lib/content.ts`
 
 ## O que é demo vs. real
 
 | Recurso | Status |
 |---------|--------|
-| UI / navegação / funil | Real (Next.js App Router) |
-| Auth (magic link / senha) | **Demo** — `localStorage` (`treino-live-demo-v1`) |
-| Checkout VOD (Stripe-shaped) | **Demo** — modal → marca owned |
-| Assinatura Premium | **Demo** — modal + Customer Portal mock |
-| Live / player / chat | **Mock** — gradients + timers, sem WebRTC |
-| Pagamentos reais | Não — sem Stripe keys |
+| UI / navegação / funil / módulos Treino+ | Real (Next.js App Router) |
+| Auth | **Demo** — localStorage |
+| Checkout VOD / Loja / Assinatura | **Demo** — modais / local buy |
+| Live / player / chat | **Mock** — session chat, sem WebRTC |
+| Fast timer | **Funcional** no client |
+| Pagamentos reais | Não — sem Stripe keys (fallback demo) |
 
-Fluxo de sucesso esperado: Free live → upsells → comprar VOD → assinar Premium → entrar na Premium Live.
+## Wiring Stripe + Supabase
 
-## Wiring real Stripe + Supabase later
-
-Stubs já no repo (não usados pelo fluxo demo de UI):
-
-- `src/lib/stripe.ts` + `src/app/api/stripe/checkout|webhook` — retornam 503 sem `STRIPE_SECRET_KEY`
-- `src/lib/supabase/*` — clients opcionais
-- `.env.example` — variáveis de teste
-
-A UI demo **não chama** essas rotas; Checkout/Subscribe/Portal são modais localStorage.
-
-Quando for para produção:
-
-1. **Supabase Auth**  
-   - Substituir `src/lib/store.ts` por sessão Supabase (magic link real).  
-   - Tabelas: `profiles`, `purchases` (`user_id`, `workout_id`), `subscriptions`.
-
-2. **Stripe Checkout (one-time VODs)**  
-   - Products/Prices por VOD em BRL.  
-   - API route `checkout.sessions.create` com `mode: "payment"`.  
-   - Webhook `checkout.session.completed` → inserir em `purchases`.
-
-3. **Stripe Subscriptions + Customer Portal**  
-   - Price recorrente Premium.  
-   - `mode: "subscription"` no Checkout.  
-   - Portal: `billingPortal.sessions.create` (substituir `PortalModal`).  
-   - Webhooks: `customer.subscription.updated|deleted`.
-
-4. **Live streaming**  
-   - Mux / IVS / Cloudflare Stream para free + premium.  
-   - Gate premium no edge/middleware checando assinatura ativa.
-
-5. **Env**  
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=
-   STRIPE_SECRET_KEY=
-   STRIPE_WEBHOOK_SECRET=
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
-   ```
-
-Arquivos centrais hoje: `src/lib/store.ts` (demo persist), `src/components/CheckoutModal.tsx`, `SubscribeModal.tsx`, `PortalModal.tsx`, `AuthModal.tsx`.
+Stubs em `src/lib/stripe*`, `src/app/api/stripe/*`, `src/lib/supabase/*` + `.env.example`.  
+UI demo não depende de keys; com `STRIPE_SECRET_KEY` o checkout tenta Hosted Checkout.
 
 ## Stack
 
-- Next.js 14 (App Router) + TypeScript + Tailwind CSS  
-- System fonts · Apple Fitness–like cards · mobile-first  
+- Next.js 14 (App Router) + TypeScript + Tailwind  
+- System fonts · Apple Fitness–like cards · mobile-first · silhuetas SVG  
 
 ## GitHub
 
-Repo alvo: [rbmny/treino-live](https://github.com/rbmny/treino-live) (público).
-
-```bash
-git init
-git add .
-git commit -m "Initial Treino Live demo app"
-git branch -M main
-git remote add origin https://github.com/rbmny/treino-live.git
-git push -u origin main
-```
-
-Não alterar `rbmny/treino-plus-preview`.
-
-
-## Stripe test vs demo
-
-Checkout and Subscribe modals call `POST /api/stripe/checkout` first (`src/lib/stripe-client.ts`).
-
-- If `STRIPE_SECRET_KEY` is set → redirect to Stripe Hosted Checkout (test mode).
-- If missing / misconfigured → **demoFallback** keeps the existing localStorage funnel (`src/lib/store.ts`) so the UI never bricks.
-- After real Checkout, success URLs land on `?paid=1` / `?subscribed=1` and unlock the same demo entitlements until Supabase persistence lands.
-- Premium needs `STRIPE_PREMIUM_PRICE_ID` (or `NEXT_PUBLIC_STRIPE_PREMIUM_PRICE_ID`).
-- Webhook: `stripe listen --forward-to localhost:3000/api/stripe/webhook`
+Repo: [rbmny/treino-live](https://github.com/rbmny/treino-live).  
+Não alterar `rbmny/treino-plus-preview` / `/workspace/trainer-preview`.
